@@ -1,103 +1,104 @@
+# FlatterenrPy
 
-# NeuLogPy loggin module
+FlatterenrPy is a Python module designed to facilitate flattening and inflating directory structures. It combines text files from a directory into a single output file, preserving directory structure within comments, and can then reconstruct the original files from this combined format.
 
-This project provides a Python-based framework for managing and interacting with NeuLog sensors. It includes functionalities for setting up sensor experiments, retrieving and storing sensor data, and visualizing real-time data.
+## Features
 
-## Project Structure
-
-```
-packaging
-│   .gitignore
-│   README.md
-│   requirements.txt
-│   setup.py
-│
-└───FlattenerPy
-        flattener.py
-```
+- **Flatten**: Combines files with specific extensions or all files into one or multiple output files.
+- **Inflate**: Recreates the original files from a combined output, preserving file content and structure.
+- **Directory Structure**: Uses the `tree` command to get a visual representation of the directory structure.
+- **File Type Detection**: Only includes text files based on encoding detection.
 
 ## Installation
 
-To get started, clone this repository and install the required dependencies:
+To use FlatterenrPy, clone the repository and install the dependencies.
 
 ```bash
-python -m pip install flatteren-py
-```
-
-## Configuration
-
-The `config/sensors.yaml` file defines the sensors available in the system. Each sensor has properties like `code`, `unit`, and `description`. Modify this file to add new sensors or update existing configurations.
-
-Example structure of `sensors.yaml`:
-
-```yaml
-sensors:
-  Temperature:
-    code: "TEMP"
-    unit: "°C"
-    description: "Measures temperature"
-  CO2:
-    code: "CO2"
-    unit: "ppm"
-    description: "Measures carbon dioxide levels"
+python -m pip install FlattenerPy
 ```
 
 ## Usage
 
-### Starting an Experiment
+### Functions
 
-To start a new experiment with specified sensors, use the `NeuLog` interface in `NeuLog.py`.
+1. **`flatten(root_dir, output_name, whole_project=True, all_in_one=False, extensions=[], ignore_directories=['.git'])`**
+
+   - Combines text files from a directory.
+   - **Parameters**:
+     - `root_dir`: Root directory to flatten.
+     - `output_name`: Base name of the output file/files.
+     - `whole_project`: If `True`, flattens the entire project; ignores `extensions`.
+     - `all_in_one`: If `True`, combines everything into a single file.
+     - `extensions`: List of file extensions to include (ignored if `whole_project=True`).
+     - `ignore_directories`: List of directories to ignore.
+   - **Returns**: None
+
+   - **Example**:
+     ```python
+     flatten('/path/to/project', 'output_file.txt', whole_project=True, all_in_one=True)
+     ```
+
+2. **`inflate(root_dir)`**
+
+   - Recreates the original directory structure from a flattened output.
+   - **Parameters**:
+     - `root_dir`: Directory where files will be inflated.
+   - **Returns**: None
+
+   - **Example**:
+     ```python
+     inflate('/path/to/output')
+     ```
+
+3. **`get_all_text_files_extensions(root_dir, ignore_directories)`**
+
+   - Returns a set of file extensions for all text files within the directory.
+   - **Parameters**:
+     - `root_dir`: Root directory to scan.
+     - `ignore_directories`: List of directories to ignore.
+
+4. **`get_directory_structure(root_dir)`**
+
+   - Gets the directory structure using the `tree` command.
+   - **Parameters**:
+     - `root_dir`: Root directory.
+   - **Returns**: Directory structure as a string.
+
+5. **`is_text_file(file_path)`**
+
+   - Checks if a file is a text file based on encoding.
+
+### Examples
+
+#### Flattening an Entire Project
 
 ```python
-from core.services.experiment_service import ExperimentService
+from FlatterenrPy import flatten
 
-# Example of setting up and starting an experiment
-experiment_service = ExperimentService()
-experiment_service.start_experiment(
-    sensors=[("Temperature", "TEMP")],
-    rate=8,
-    samples=1000
-)
+flatten('/path/to/project', 'output_file.txt', whole_project=True, all_in_one=True)
 ```
 
-### Real-Time Data Visualization
+#### Flattening with Specific Extensions
 
-The `test.py` script includes a visualization example using Matplotlib. This script retrieves real-time data from a respiration sensor and plots it dynamically.
+```python
+from FlatterenrPy import flatten
 
-```bash
-python test.py
+flatten('/path/to/project', 'output_file.txt', whole_project=False, extensions=['.py', '.md'])
 ```
 
-This script initializes an experiment, collects data samples, and plots them in real time. Modify parameters like `sensor_type`, `sensor_id`, `rate`, and `samples` within `test.py` to customize the experiment.
+#### Inflating a Flattened File
 
+```python
+from FlatterenrPy import inflate
 
-## Running Tests
-
-Tests are organized in the `tests` directory and use the `pytest` framework. To run the tests, use:
-
-```bash
-pytest tests/
+inflate('/path/to/inflated_output')
 ```
 
-Tests include:
-- **API client tests** to verify interaction with the NeuLog server.
-- **Sensor and Experiment service tests** to check sensor management and experiment lifecycle functionality.
+## Requirements
 
-## Key Modules
-
-- **core/api_client.py**: Manages HTTP requests to the NeuLog API.
-- **core/services/experiment_service.py**: Configures and manages experiments.
-- **core/services/sensor_service.py**: Manages sensor registry and metadata.
-- **models/sensor.py**: Defines sensor schema and validation.
-- **utils/file_loader.py**: Loads YAML configurations for sensor metadata.
-
-## Contributing
-
-Contributions are welcome! Please open issues to discuss potential improvements or submit pull requests.
-
----
+- `tree` command (for directory structure on non-Windows systems).
+- Python 3.6+
 
 ## License
 
 This project is licensed under the MIT License.
-
