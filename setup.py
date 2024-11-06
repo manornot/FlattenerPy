@@ -12,10 +12,10 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "flatten = flattener:flatten_entry",
-            "inflate = flattener:inflate_entry"
+            "flatten = FlattenerPy.flattener:flatten_entry",
+            "inflate = FlattenerPy.flattener:inflate_entry"
         ]
     },
-    long_description=description,
+    long_description="Flatten and inflate file structures",
     long_description_content_type="text/markdown",
 )
