@@ -97,40 +97,27 @@ def inflate(root_dir):
                 text_without_paths = re.findall(r"# -{10} Start of .+? -{10}\n\n(.*?)(?=# -{10} End of .+? -{10})", match, re.DOTALL)[0]
                 f.write(text_without_paths)
 
-def main():
-    parser = argparse.ArgumentParser(description="FlattenerPy CLI: A tool to flatten and inflate project folders.")
-    subparsers = parser.add_subparsers(title="commands", dest="command")
-
-    # Flatten command parser
-    flatten_parser = subparsers.add_parser("flatten", help="Flatten a project directory into a single file.")
-    flatten_parser.add_argument("root_dir", type=str, help="Path to the project directory to flatten.")
-    flatten_parser.add_argument("output_name", type=str, help="Name of the output file.")
-    flatten_parser.add_argument(
-        "--whole_project", action="store_true", help="Flatten all text files in the project."
-    )
-    flatten_parser.add_argument(
-        "--all_in_one", action="store_true", help="Combine all files into a single output file."
-    )
-    flatten_parser.add_argument(
-        "--extensions", nargs="*", help="List of specific file extensions to flatten, e.g., .py .txt."
-    )
-    flatten_parser.add_argument(
-        "--ignore_directories", nargs="*", default=['.git'], help="Directories to ignore."
-    )
-    flatten_parser.set_defaults(func=flatten)
-
-    # Inflate command parser
-    inflate_parser = subparsers.add_parser("inflate", help="Restore a flattened project file to its original structure.")
-    inflate_parser.add_argument("root_dir", type=str, help="Path to the directory to inflate.")
-    inflate_parser.set_defaults(func=inflate)
-
+def flatten_entry():
+    parser = argparse.ArgumentParser(description="Flatten files in a directory")
+    parser.add_argument("root_dir", type=str, help="Root directory to flatten")
+    parser.add_argument("output_name", type=str, help="Output file name")
+    parser.add_argument("--whole_project", action="store_true", help="Flatten entire project")
+    parser.add_argument("--all_in_one", action="store_true", help="Combine all files in one")
+    parser.add_argument("--extensions", nargs="*", help="List of file extensions to include")
+    parser.add_argument("--ignore_directories", nargs="*", default=['.git'], help="Directories to ignore")
     args = parser.parse_args()
-    if args.command == "flatten":
-        args.func(args.root_dir, args.output_name, args.whole_project, args.all_in_one, args.extensions, args.ignore_directories)
-    elif args.command == "inflate":
-        args.func(args.root_dir)
-    else:
-        parser.print_help()
 
-if __name__ == "__main__":
-    main()
+    flatten(
+        root_dir=args.root_dir,
+        output_name=args.output_name,
+        whole_project=args.whole_project,
+        all_in_one=args.all_in_one,
+        extensions=args.extensions,
+        ignore_directories=args.ignore_directories
+    )
+
+def inflate_entry():
+    parser = argparse.ArgumentParser(description="Inflate files back from a flattened structure")
+    parser.add_argument("root_dir", type=str, help="Root directory to inflate files to")
+    args = parser.parse_args()
+    inflate(root_dir=args.root_dir)

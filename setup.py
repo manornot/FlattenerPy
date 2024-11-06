@@ -12,7 +12,8 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "flattenerpy = flattener_py:main"  # Single entry point for the CLI
+            "flatten = flattener:flatten_entry",
+            "inflate = flattener:inflate_entry"
         ]
     },
     long_description=description,
