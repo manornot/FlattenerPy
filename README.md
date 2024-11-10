@@ -68,7 +68,9 @@ python -m pip install FlattenerPy
 
    - Checks if a file is a text file based on encoding.
 
-### Examples
+## Examples
+
+### Python
 
 #### Flattening an Entire Project
 
@@ -91,8 +93,26 @@ flatten('/path/to/project', 'output_file.txt', whole_project=False, extensions=[
 ```python
 from FlatterenrPy import inflate
 
-inflate('/path/to/inflated_output')
+inflate('/path/to/flattened_object')
 ```
+
+### CLI Commands
+1. **Flatten Entire Project into One File**:
+   ```bash
+   flatten .\arbitrageBot\ arbitrageBotFlat --all_in_one --whole_project
+   ```
+
+2. **Flatten Only Specific Extensions into Separate Files**:
+   ```bash
+   flatten .\arbitrageBot\ arbitrageBotFlat --extensions .py .txt
+   ```
+
+3. **Flatten Ignoring Certain Directories**:
+   ```bash
+   flatten .\arbitrageBot\ arbitrageBotFlat --ignore_directories .git __pycache__
+   ```
+
+
 
 ## Requirements
 
