@@ -118,7 +118,16 @@ def inflate(root_dir):
 import argparse
 
 def flatten_entry():
-    parser = argparse.ArgumentParser(description="Flatten files in a directory")
+    parser = argparse.ArgumentParser(
+        description="Flatten files in a directory",
+        epilog="""\
+Examples of usage:
+  flatten .\\my_project\\ output_flat --extensions .py .txt
+  flatten .\\my_project\\ output_flat --all_in_one --whole_project
+  flatten .\\my_project\\ output_flat --ignore_directories .git __pycache__
+""",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     parser.add_argument("root_dir", type=str, help="Root directory to flatten")
     parser.add_argument("output_name", type=str, help="Output file name")
     parser.add_argument("--whole_project", action="store_true", default=False, help="Flatten entire project")
@@ -137,14 +146,31 @@ def flatten_entry():
     )
 
 def inflate_entry():
-    parser = argparse.ArgumentParser(description="Inflate files back from a flattened structure")
+    parser = argparse.ArgumentParser(
+        description="Inflate files back from a flattened structure",
+        epilog="""\
+Examples of usage:
+  inflate flattened_project_dir
+""",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     parser.add_argument("root_dir", type=str, help="Root directory to inflate files to")
     args = parser.parse_args()
 
     inflate(root_dir=args.root_dir)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="File flattener and inflator utility")
+    parser = argparse.ArgumentParser(
+        description="File flattener and inflator utility",
+        epilog="""\
+Examples of usage:
+  flatten .\\my_project\\ output_flat --extensions .py
+  flatten .\\my_project\\ output_flat --all_in_one --whole_project
+  inflate flattened_project_dir
+""",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+    
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose (debug) logging")
 
     subparsers = parser.add_subparsers(dest="command", required=True)
